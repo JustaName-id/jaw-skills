@@ -1,7 +1,7 @@
 ---
-
-## name: jaw-sdk-best-practices
+name: jaw-sdk-best-practices
 description: Best practices and usage guide for the JAW SDK (@jaw.id/core, @jaw.id/wagmi, @jaw.id/ui). Use this skill when writing code that uses jaw-sdk or @jaw.id packages, integrating JAW smart accounts into an application, configuring JAW SDK features (passkeys, permissions, gas sponsoring, ENS), building with JAW wagmi hooks, implementing headless/server-side smart account operations, debugging JAW SDK issues, or when asked about JAW SDK patterns, APIs, or best practices.
+---
 
 # JAW SDK Best Practices
 
