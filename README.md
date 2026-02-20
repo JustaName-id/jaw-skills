@@ -5,11 +5,11 @@ Skills for the [JAW SDK](https://jaw.id) — installable via [skills.sh](https:/
 ## Install
 
 ```
-npx skills add https://github.com/JustaName-id/jaw-skills --skill jaw-sdk-best-practices
+npx skills add JustaName-id/jaw-skills
 ```
 
 ## Available skills
 
-| Skill | Description |
-|-------|-------------|
+| Skill                    | Description                                                       |
+| ------------------------ | ----------------------------------------------------------------- |
 | `jaw-sdk-best-practices` | Best practices, patterns, and rules for building with the JAW SDK |
