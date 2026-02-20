@@ -44,7 +44,9 @@ function WalletButton() {
 
 ### Connection with SIWE (Sign-In With Ethereum)
 
-You MUST use the `capabilities.signInWithEthereum` field on the `connect` call to request SIWE. You MUST provide a fresh `nonce` from your backend before initiating the connection.
+You MUST use the `capabilities.signInWithEthereum` field on the `connect` call to request SIWE. 
+
+You MUST provide a fresh `nonce` from your backend before initiating the connection.
 
 You MUST verify the SIWE response on your backend after a successful connection. The signed message and signature are available on `data.accounts[0].capabilities?.signInWithEthereum`.
 
@@ -74,7 +76,7 @@ function SignInButton() {
     }, {
       onSuccess: async (data) => {
         const siweResponse = data.accounts[0].capabilities?.signInWithEthereum;
-        if (siweResponse && 'message' in siweResponse) {
+        if (iweResponse && 'signature' in siweResponse) {
           await fetch('/api/siwe/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -94,7 +96,7 @@ function SignInButton() {
 
 ### Connection with ENS subname
 
-You MUST ensure the JAW connector has ENS configured before requesting subname capabilities. You MUST NOT request `subnameTextRecords` on a connector that lacks ENS configuration.
+You MUST ensure your API key has subname issuance enabled on the JAW dashboard  before requesting subnameTextRecords. There is no connector-level ENS configuration — eligibility is controlled at the API key level.
 
 ```tsx
 import { useConnect } from '@jaw.id/wagmi';
@@ -137,8 +139,10 @@ await jaw.provider.request({ method: 'wallet_disconnect' });
 ### Key rules
 
 - You MUST import `useConnect` and `useDisconnect` from `@jaw.id/wagmi` (not from `wagmi`) to get capabilities support.
-- You MUST pass an empty object `{}` to `disconnect({})` — it requires a parameter.
-- You MUST pass `connector` when calling `connect()` — it is required.
+- When using the useDisconnect hook, pass {} to disconnectWallet({}) by convention.
+  The underlying action does not throw if the argument is omitted, but the hook's
+  mutate function expects variables to be passed explicitly.You MUST pass `connector` when calling `connect()` — it is required.
 - You MUST use `wallet_connect` (not `eth_requestAccounts`) when you need capabilities (SIWE, subnames).
 - You MUST NOT call `connect()` without a connector reference.
 - After disconnect, `useAccount` will reflect `isConnected: false` automatically.
+

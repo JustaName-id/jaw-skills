@@ -118,11 +118,13 @@ const status = account.getCallStatus(batchId);
 
 ### sendTransaction vs sendCalls
 
-| | `sendTransaction()` | `sendCalls()` |
-|---|---|---|
-| Returns | Transaction hash | User operation ID |
-| Waits | Yes, until mined | No, returns immediately |
-| Use case | Need confirmation | Fire and forget |
+
+|          | `sendTransaction()` | `sendCalls()`           |
+| -------- | ------------------- | ----------------------- |
+| Returns  | Transaction hash    | User operation ID       |
+| Waits    | Yes, until mined    | No, returns immediately |
+| Use case | Need confirmation   | Fire and forget         |
+
 
 ### Key rules
 
@@ -131,7 +133,8 @@ const status = account.getCallStatus(batchId);
 - You MUST use `wallet_sendCalls` (or `useSendCalls`) for batch operations — individual transactions cannot be batched.
 - You MUST NOT assume a batch is complete just because `sendCalls` returned — poll with `getCallStatus`.
 - All calls in a batch are atomic: they all succeed or all fail together.
-- Users can pay gas in stablecoins natively — no extra configuration needed.
+- Users can pay gas in stablecoins by configuring the JAW ERC-20 paymaster — either
+  globally via `paymasters` in the SDK config, or per-call via paymasterUrl/paymasterContext overrides. The token address must always be specified.
 - For fully sponsored (gasless) transactions, configure `paymasters` in the SDK config.
 - Value MUST be in wei (use `parseEther`, `parseUnits`, or hex strings).
 
@@ -158,3 +161,4 @@ import { encodeFunctionData, erc20Abi } from 'viem';
   }),
 }
 ```
+

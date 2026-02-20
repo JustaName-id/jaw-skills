@@ -12,7 +12,7 @@ import type { UIHandler, UIHandlerConfig, UIRequest, UIResponse } from '@jaw.id/
 class MyUIHandler implements UIHandler {
   private config: UIHandlerConfig | null = null;
 
-  init(config: UIHandlerConfig): void {
+  init?(config: UIHandlerConfig): void {
     // Called once when the SDK initializes
     // Store config for later use
     this.config = config;
@@ -25,12 +25,12 @@ class MyUIHandler implements UIHandler {
     throw new Error('Not implemented');
   }
 
-  canHandle(request: UIRequest): boolean {
+  canHandle?(request: UIRequest): boolean {
     // Return true if this handler can process the given request type
     return true;
   }
 
-  async cleanup(): Promise<void> {
+  async cleanup?(): Promise<void> {
     // Called when the SDK is destroyed
     // Clean up event listeners, DOM elements, timers, etc.
     this.config = null;
@@ -48,7 +48,7 @@ interface UIHandlerConfig {
   defaultChainId?: number;
   paymasters?: Record<number, { url: string; context?: Record<string, unknown> }>;
   appName?: string;
-  appLogoUrl?: string;
+  appLogoUrl?: string | null;
   ens?: string;
   showTestnets?: boolean;
 }
@@ -58,15 +58,17 @@ interface UIHandlerConfig {
 
 Your `request` method must handle these methods:
 
-| Type | Description | When triggered |
-|--------|-------------|----------------|
-| `wallet_connect` | User connection / account creation | `connect()` or `eth_requestAccounts` |
-| `personal_sign` | Personal message signing (EIP-191) | `signMessage()` |
-| `eth_signTypedData_v4` | Typed data signing (EIP-712) | `signTypedData()` |
-| `wallet_sendCalls` | Batch transaction approval | `sendCalls()` or `sendTransaction()` |
-| `wallet_grantPermissions` | Permission grant approval | `grantPermissions()` |
-| `wallet_revokePermissions` | Permission revocation | `revokePermissions()` |
-| `wallet_sign` | Unified signing (ERC-7871) | `useSign()` |
+
+| Type                       | Description                        | When triggered                       |
+| -------------------------- | ---------------------------------- | ------------------------------------ |
+| `wallet_connect`           | User connection / account creation | `connect()` or `eth_requestAccounts` |
+| `personal_sign`            | Personal message signing (EIP-191) | `signMessage()`                      |
+| `eth_signTypedData_v4`     | Typed data signing (EIP-712)       | `signTypedData()`                    |
+| `wallet_sendCalls`         | Batch transaction approval         | `sendCalls()` or `sendTransaction()` |
+| `wallet_grantPermissions`  | Permission grant approval          | `grantPermissions()`                 |
+| `wallet_revokePermissions` | Permission revocation              | `revokePermissions()`                |
+| `wallet_sign`              | Unified signing (ERC-7871)         | `useSign()`                          |
+
 
 ### UIResponse
 
@@ -95,7 +97,7 @@ UIError.userRejected()    // EIP-1193 code 4001
 UIError.timeout()
 
 // Handler cannot process this request type
-UIError.unsupportedRequest()
+UIError.unsupportedRequest(request.type)
 ```
 
 ### Example: handling wallet_connect
@@ -275,3 +277,4 @@ async cleanup(): Promise<void> {
   this.config = null;
 }
 ```
+

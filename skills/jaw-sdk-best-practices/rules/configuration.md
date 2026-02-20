@@ -4,23 +4,27 @@ All configuration options for the JAW SDK, applicable to both wagmi connector an
 
 ### Core parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `apiKey` | `string` | Yes | API key from dashboard.jaw.id |
-| `appName` | `string` | No | App name shown in auth UI (default: 'DApp') |
-| `appLogoUrl` | `string \| null` | No | Logo URL for auth UI (HTTPS, 200x200px min) |
-| `ens` | `string` | No | ENS domain for subname issuance (e.g., 'myapp.eth') |
-| `defaultChainId` | `number` | No | Default chain (default: 1 = Ethereum Mainnet) |
-| `paymasters` | `Record<number, { url: string; context?: Record<string, unknown> }>` | No | Paymaster config per chain for gas sponsoring |
+
+| Parameter        | Type                                                                 | Required | Description                                         |
+| ---------------- | -------------------------------------------------------------------- | -------- | --------------------------------------------------- |
+| `apiKey`         | `string`                                                             | Yes      | API key from dashboard.jaw.id                       |
+| `appName`        | `string`                                                             | No       | App name shown in auth UI (default: 'DApp')         |
+| `appLogoUrl`     | `string                                                              | null`    | No                                                  |
+| `ens`            | `string`                                                             | No       | ENS domain for subname issuance (e.g., 'myapp.eth') |
+| `defaultChainId` | `number`                                                             | No       | Default chain (default: 1 = Ethereum Mainnet)       |
+| `paymasters`     | `Record<number, { url: string; context?: Record<string, unknown> }>` | No       | Paymaster config per chain for gas sponsoring       |
+
 
 ### Preference options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `mode` | `Mode.CrossPlatform \| Mode.AppSpecific` | `Mode.CrossPlatform` | Auth mode |
-| `uiHandler` | `UIHandler` | `undefined` | Required for AppSpecific mode |
-| `showTestnets` | `boolean` | `false` | Show testnet networks |
-| `authTTL` | `number` | `86400` | Session cache TTL in seconds (0 = require auth every page load) |
+
+| Option         | Type                | Default           | Description                                                     |
+| -------------- | ------------------- | ----------------- | --------------------------------------------------------------- |
+| `mode`         | `Mode.CrossPlatform | Mode.AppSpecific` | `Mode.CrossPlatform`                                            |
+| `uiHandler`    | `UIHandler`         | `undefined`       | Required for AppSpecific mode                                   |
+| `showTestnets` | `boolean`           | `false`           | Show testnet networks                                           |
+| `authTTL`      | `number`            | `86400`           | Session cache TTL in seconds (0 = require auth every page load) |
+
 
 ### Correct wagmi configuration
 
@@ -42,7 +46,7 @@ export const config = createConfig({
         showTestnets: false,
       },
       paymasters: {
-        8453: { url: 'https://api.pimlico.io/v2/8453/rpc?apikey=YOUR_KEY' },
+        8453: { url: 'https://paymaster.example.com/rpc?apikey=YOUR_KEY' },
       },
     }),
   ],
@@ -69,6 +73,7 @@ const jaw = JAW.create({
 ### Minimal configuration
 
 The only required option is `apiKey`:
+
 ```typescript
 // Wagmi
 const connector = jaw({ apiKey: 'your-api-key' });
@@ -81,7 +86,7 @@ const jaw = JAW.create({ apiKey: 'your-api-key' });
 
 - You MUST provide `apiKey` -- it is the only required configuration option.
 - You MUST configure allowed domains in the JAW Dashboard for your API key.
-- You MUST set `appLogoUrl` to an HTTPS URL with a minimum 200x200px square image.
+- if you provide `appLogoUrl`, it MUST set to an HTTPS URL with a minimum 200x200px square image.
 - You MUST enable `preference.showTestnets: true` when using a testnet `defaultChainId`.
 - You MUST provide a `uiHandler` when using `Mode.AppSpecific`.
 - You MUST NOT store the API key in client-side code in production -- use environment variables.
@@ -90,12 +95,14 @@ const jaw = JAW.create({ apiKey: 'your-api-key' });
 ### Common mistakes
 
 Do NOT use a testnet chain ID without enabling testnets:
+
 ```typescript
 // Wrong -- testnet chain won't be available
 jaw({ apiKey: 'key', defaultChainId: 84532 })
 ```
 
 Instead:
+
 ```typescript
 // Correct
 jaw({
@@ -104,3 +111,4 @@ jaw({
   preference: { showTestnets: true },
 })
 ```
+

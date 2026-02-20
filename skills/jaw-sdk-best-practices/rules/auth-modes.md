@@ -4,13 +4,15 @@ Two modes determine where passkey operations occur: **CrossPlatform** and **AppS
 
 ### Mode Comparison
 
-| Feature | CrossPlatform (Default) | AppSpecific |
-|---------|------------------------|-------------|
-| Passkey operations | On `keys.jaw.id` (popup) | Within your dApp |
-| User experience | Redirects to popup | Stays in your app |
-| Wallet reuse | Universal across apps | App-specific only |
-| Branding | JAW interface | Custom UI supported |
-| Setup complexity | None (default) | Requires uiHandler |
+
+| Feature            | CrossPlatform (Default)  | AppSpecific         |
+| ------------------ | ------------------------ | ------------------- |
+| Passkey operations | On `keys.jaw.id` (popup) | Within your dApp    |
+| User experience    | Redirects to popup       | Stays in your app   |
+| Wallet reuse       | Universal across apps    | App-specific only   |
+| Branding           | JAW interface            | Custom UI supported |
+| Setup complexity   | None (default)           | Requires uiHandler  |
+
 
 ### Use CrossPlatform (default) when:
 
@@ -75,7 +77,7 @@ const jaw = JAW.create({
 ### Key Rules
 
 - You MUST provide a `uiHandler` when using `Mode.AppSpecific` — the SDK will throw without one.
-- You MUST install `@jaw.id/ui` for `ReactUIHandler` in app-specific mode.
+- You CAN use ReactUIHandler from @jaw.id/ui as a pre-built solution, OR implement the UIHandler interface yourself.
 - You MUST NOT switch modes after initialization — mode is set once at creation.
 - Use `Mode.CrossPlatform` (default) unless you have a specific reason for AppSpecific.
 - Import `Mode` from `@jaw.id/core`, not from `@jaw.id/wagmi`.
@@ -106,3 +108,4 @@ jaw({
   },
 });
 ```
+

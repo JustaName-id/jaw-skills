@@ -1,16 +1,16 @@
 ---
-name: jaw-sdk-best-practices
+
+## name: jaw-sdk-best-practices
 description: Best practices and usage guide for the JAW SDK (@jaw.id/core, @jaw.id/wagmi, @jaw.id/ui). Use this skill when writing code that uses jaw-sdk or @jaw.id packages, integrating JAW smart accounts into an application, configuring JAW SDK features (passkeys, permissions, gas sponsoring, ENS), building with JAW wagmi hooks, implementing headless/server-side smart account operations, debugging JAW SDK issues, or when asked about JAW SDK patterns, APIs, or best practices.
----
 
 # JAW SDK Best Practices
 
-Opinionated guide for building applications with the JAW SDK —
-passkey-authenticated smart accounts on EVM chains with programmable permissions.
+Guide for building applications with the JAW SDK passkey-authenticated smart accounts on EVM chains with programmable permissions.
 
 ## When to use
 
 Reference these guidelines when:
+
 - Installing or setting up `@jaw.id/wagmi`, `@jaw.id/core`, or `@jaw.id/ui`
 - Configuring the JAW connector or provider (API key, modes, paymasters, ENS)
 - Connecting/disconnecting wallets with passkey authentication
@@ -31,42 +31,49 @@ Reference these guidelines when:
 ## Key facts
 
 - **Packages:** `@jaw.id/wagmi` (React), `@jaw.id/core` (vanilla JS / server), `@jaw.id/ui` (app-specific mode UI)
-- **API Key:** Required. Get one at https://dashboard.jaw.id
-- **EIP-1193 compatible:** Drop-in replacement for MetaMask/any wallet
+- **API Key:** Required. Get one at [https://dashboard.jaw.id](https://dashboard.jaw.id)
+- **EIP-1193 compatible:** Drop-in replacement for MetaMask or any wallet
 - **Smart accounts:** ERC-4337 with passkey signers, gasless tx, batch ops, permissions
 - **EntryPoint:** v0.8 only (for paymasters)
 
 ## Rule index
 
 ### 1. Setup & Configuration
+
 - <rules/installation.md> - Package installation, peer dependencies, choosing wagmi vs core
 - <rules/configuration.md> - All config options: apiKey, appName, ens, mode, paymasters, preference
 - <rules/auth-modes.md> - CrossPlatform vs AppSpecific modes and when to use each
 
 ### 2. Wagmi Integration (React)
+
 - <rules/wagmi-setup.md> - Wagmi connector setup, providers, using standard wagmi hooks with JAW
 - <rules/connect-disconnect.md> - useConnect, useDisconnect, connection with capabilities
 
 ### 3. Core Operations
+
 - <rules/transactions.md> - Sending transactions, batch calls, gas estimation, checking status
 - <rules/signing.md> - Personal sign, typed data, unified wallet_sign, cross-chain signing
 
 ### 4. Permissions & Payments
+
 - <rules/permissions.md> - Granting, querying, revoking permissions (ERC-7715)
 - <rules/subscription-payments.md> - Recurring subscription payments using permissions
 - <rules/stablecoin-payments.md> - Headless USDC payments, batch payouts, ERC-20 gas
 
 ### 5. Identity & Auth
+
 - <rules/ens-identity.md> - ENS subname issuance, profile resolution, text records
 - <rules/siwe.md> - Sign-In With Ethereum (SIWE) implementation
 - <rules/gas-sponsoring.md> - Paymaster setup, sponsorship policies, multi-chain config
 
 ### 6. Advanced
+
 - <rules/account-api.md> - Headless Account class for AI agents, server-side, embedded wallets
 - <rules/custom-ui-handler.md> - Building a custom UIHandler for app-specific mode
 - <rules/provider-api.md> - Direct provider RPC methods reference and patterns
 
 ### 7. Reference
+
 - <rules/error-handling.md> - EIP-1193 error codes, common errors, debugging
 - <rules/typescript-types.md> - Key TypeScript interfaces and type patterns
 

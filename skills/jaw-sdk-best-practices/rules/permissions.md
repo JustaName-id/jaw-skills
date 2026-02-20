@@ -17,7 +17,7 @@ function GrantButton() {
 
   const handleGrant = () => {
     grant({
-      expiry: Math.floor(Date.now() / 1000) + 86400 * 7, // 1 week
+      end: Math.floor(Date.now() / 1000) + 86400 * 7, // 1 week
       spender: '0xYourBackendWallet...',
       permissions: {
         calls: [{
@@ -56,8 +56,8 @@ function PermissionsList() {
   return (
     <ul>
       {permissions?.map((p) => (
-        <li key={p.id}>
-          Spender: {p.spender} | Expires: {new Date(p.expiry * 1000).toLocaleDateString()}
+        <li key={p.permissionId}>
+          Spender: {p.spender} | Expires: {new Date(p.end * 1000).toLocaleDateString()}
         </li>
       ))}
     </ul>
@@ -108,7 +108,7 @@ permissions: {
     token: USDC_ADDRESS,
     allowance: parseUnits('100', 6).toString(), // 100 USDC
     unit: 'month',          // 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year' | 'forever'
-    multiplier: 1,          // optional, 1-255. E.g., unit:'week', multiplier:2 = every 2 weeks
+    multiplier: 1,          // optional, 1–65535 E.g., unit:'week', multiplier:2 = every 2 weeks
   }],
 }
 ```
@@ -184,10 +184,11 @@ await jaw.provider.request({
 
 - You MUST store `permissionId` from the grant response -- it is required to execute delegated calls and to revoke.
 - You MUST provide `expiry` as a Unix timestamp in seconds (not milliseconds) -- use `Math.floor(Date.now() / 1000) + duration`.
-- You MUST provide either `functionSignature` or `selector` for each call permission -- not both needed, but one is required.
+- You MUST provide either `functionSignature` or `selector` for each call permission -- one is required. If both are provided, `selector` takes priority and `functionSignature` is ignored.
 - You MUST include `spends` if the permission involves moving funds (token transfers).
 - You MUST use `Account.fromLocalAccount()` with a private key for server-side permission execution.
 - You MUST NOT attempt to re-grant a revoked permission -- revocation is permanent and irreversible.
 - You MUST NOT forget that revocation requires an on-chain transaction (gas cost, unless a paymaster is configured).
 - You MUST use `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE` for native ETH in spend permissions (ERC-7528).
 - You MUST revoke permissions on the correct chain where they were granted -- permissions are chain-specific.
+

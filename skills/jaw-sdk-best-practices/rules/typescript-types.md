@@ -60,12 +60,11 @@ Stored account entry returned by `Account.getStoredAccounts`:
 
 ```typescript
 interface PasskeyAccount {
-  address: Address;
-  credentialId: string;
-  publicKey: string;
-  username: string;
   creationDate: string;
+  credentialId: string;
   isImported: boolean;
+  username: string;
+  publicKey: `0x${string}`;
 }
 ```
 
@@ -74,8 +73,10 @@ interface PasskeyAccount {
 Returned by `account.sendCalls()`:
 
 ```typescript
-interface BundledTransactionResult {
-  id: Hex;         // User operation ID
+import type { Hash } from 'viem';
+
+type BundledTransactionResult = {
+  id: Hash;        // User operation ID
   chainId: number; // Chain the operation was submitted to
 }
 ```
@@ -170,10 +171,10 @@ interface WalletGrantPermissionsResponse {
 
 ```typescript
 interface UIHandler {
-  init(config: UIHandlerConfig): void;
+  init?(config: UIHandlerConfig): void;
   request<T>(request: UIRequest): Promise<UIResponse<T>>;
-  canHandle(request: UIRequest): boolean;
-  cleanup(): Promise<void>;
+  canHandle?(request: UIRequest): boolean;
+  cleanup?(): Promise<void>;
 }
 
 interface UIHandlerConfig {
@@ -181,7 +182,7 @@ interface UIHandlerConfig {
   defaultChainId?: number;
   paymasters?: Record<number, { url: string; context?: Record<string, unknown> }>;
   appName?: string;
-  appLogoUrl?: string;
+  appLogoUrl?: string | null;
   ens?: string;
   showTestnets?: boolean;
 }
