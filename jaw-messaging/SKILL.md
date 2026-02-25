@@ -63,11 +63,7 @@ Reference these guidelines when:
 
 - <rules/use-cases.md> - Concrete scenarios and examples: agents, enterprise, payments, dApps
 
-### 7. Investor Messaging
-
-- <rules/investor.md> - Fundraising narratives, TAM framing, traction, moat, and evolution story
-
-### 8. Conferences & Events
+### 7. Conferences & Events
 
 - <rules/conference.md> - Speaker bios, talk abstracts, booth copy, and event application templates
 
