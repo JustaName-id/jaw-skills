@@ -1,6 +1,15 @@
 ## ENS Identity
 
-ENS subname issuance and profile resolution using JAW and the JustaName SDK.
+ENS subname issuance, programmatic subname creation, and profile resolution. JAW SDK (`@jaw.id/core`) handles subname issuance during wallet connect, while JustaName SDK (`@justaname.id/sdk`) is a **separate SDK** for full programmatic subname management. Both SDKs use the same API key from `dashboard.jaw.id`.
+
+### JustaName SDK vs JAW SDK
+
+- **JAW SDK** (`@jaw.id/core`, `@jaw.id/wagmi`) — smart account wallet with passkey authentication. Handles ENS subname issuance automatically during account creation. Use this when you want users to claim a subname as part of the connect flow.
+- **JustaName SDK** (`@justaname.id/sdk`, `@justaname.id/react`) — dedicated ENS subname management. Create, reserve, accept, revoke, and resolve subnames programmatically. Use this when you need full control over subname lifecycle outside the wallet connect flow.
+
+The **same API key** from `dashboard.jaw.id` works for both SDKs — you do NOT need a separate key for JustaName SDK.
+
+They are complementary: JAW auto-issues subnames on connect; JustaName gives full programmatic control over subname creation and management.
 
 ### ENS configuration
 
@@ -61,9 +70,49 @@ function ConnectWithProfile() {
 }
 ```
 
+### Subname creation (JustaName SDK)
+
+For programmatic subname creation outside the wallet connect flow, use `@justaname.id/sdk` or `@justaname.id/react`.
+
+```bash
+npm install @justaname.id/sdk
+# or for React
+npm install @justaname.id/react
+```
+
+#### Initialize with ensDomains config
+
+Subname creation requires the full config with `ensDomains` and `apiKey`. Resolution-only use cases only need `networks`.
+
+```typescript
+import { JustaName } from '@justaname.id/sdk';
+
+const justaName = JustaName.init({
+  networks: [{ chainId: 1, providerUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' }],
+  ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'your-api-key' }],
+  config: { domain: 'yourdapp.com', origin: 'https://yourdapp.com' },
+});
+```
+
+#### Core SDK methods
+
+- `justaName.subnames.addSubname()` — create a new subname (requires SIWE auth + API key)
+- `justaName.subnames.reserveSubname()` — reserve a subname for future claiming
+- `justaName.subnames.acceptSubname()` — accept a reserved/invited subname
+- `justaName.subnames.revokeSubname()` — revoke an existing subname
+- `justaName.subnames.isSubnameAvailable()` — check availability
+
+#### React hooks (`@justaname.id/react`)
+
+- `useAddSubname` — claim/create subnames off-chain
+- `useAcceptSubname` — accept invitations
+- `useIsSubnameAvailable` — availability check with debouncing
+- `useRevokeSubname` — revoke subnames
+- `useUpdateSubname` — update text records and addresses
+
 ### Profile resolution (JustaName SDK)
 
-Profile resolution uses a separate package, `@justaname.id/sdk`. You MUST install it independently from the JAW SDK.
+Profile resolution uses `@justaname.id/sdk`. For resolution-only use cases, you only need `networks` in the init config — `ensDomains` with `apiKey` is only required when creating subnames.
 
 ```bash
 npm install @justaname.id/sdk
@@ -113,6 +162,10 @@ console.log(result.ens); // 'alice.myapp.eth'
 - You MUST NOT use `eth_requestAccounts` when requesting subname capabilities -- use `wallet_connect` (or `useConnect` from `@jaw.id/wagmi`) instead.
 - You MUST NOT request `subnameTextRecords` on a connector that lacks `ens` configuration -- text records require an ENS domain to be set.
 - Text records are only attached if `ens` is configured AND the user creates a new account during the connection flow.
+- You MUST use `@justaname.id/sdk` (not `@jaw.id/core`) for programmatic subname creation -- JAW SDK only issues subnames during wallet connect.
+- You MUST provide `ensDomains` with `apiKey` in JustaName SDK init when creating subnames -- resolution-only use cases only need `networks`.
+- The API key from `dashboard.jaw.id` works for both JAW SDK and JustaName SDK -- you do NOT need a separate key.
+- You MUST NOT confuse `@justaname.id/sdk` with `@jaw.id/core` -- they are separate SDKs serving different purposes.
 
 ### Common mistakes
 
@@ -135,4 +188,49 @@ jaw.getRecords({ ens: 'alice.myapp.eth' }); // Does not exist
 import { JustaName } from '@justaname.id/sdk';
 const justaName = JustaName.init({ networks: [{ chainId: 1, providerUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' }] });
 const profile = await justaName.subnames.getRecords({ ens: 'alice.myapp.eth' });
+```
+
+Do NOT try to create subnames with the JAW SDK:
+
+```typescript
+// Wrong -- JAW SDK does not have subname creation methods
+import { JAW } from '@jaw.id/core';
+const jaw = JAW.create({ apiKey: 'key', ens: 'myapp.eth' });
+jaw.subnames.addSubname({ subname: 'alice.myapp.eth' }); // Does not exist
+
+// Correct -- use @justaname.id/sdk for programmatic subname creation
+import { JustaName } from '@justaname.id/sdk';
+const justaName = JustaName.init({
+  networks: [{ chainId: 1, providerUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' }],
+  ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'your-api-key' }],
+  config: { domain: 'yourdapp.com', origin: 'https://yourdapp.com' },
+});
+await justaName.subnames.addSubname({ subname: 'alice.myapp.eth' });
+```
+
+Do NOT initialize JustaName SDK without `ensDomains` when creating subnames:
+
+```typescript
+// Wrong -- missing ensDomains, subname creation will fail
+const justaName = JustaName.init({
+  networks: [{ chainId: 1, providerUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' }],
+});
+await justaName.subnames.addSubname({ subname: 'alice.myapp.eth' }); // Fails
+
+// Correct -- include ensDomains with apiKey for subname creation
+const justaName = JustaName.init({
+  networks: [{ chainId: 1, providerUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' }],
+  ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'your-api-key' }],
+  config: { domain: 'yourdapp.com', origin: 'https://yourdapp.com' },
+});
+```
+
+Do NOT use a different API key for JustaName SDK:
+
+```typescript
+// Wrong -- using a separate key for JustaName SDK
+ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'some-other-key' }]
+
+// Correct -- same API key from dashboard.jaw.id works for both SDKs
+ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'your-jaw-api-key' }]
 ```
