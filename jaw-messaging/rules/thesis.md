@@ -52,6 +52,23 @@ The harder and more valuable problem is the **permission layer**: not how you pr
 
 These are **permission problems, not key management problems**. They're best solved at the account layer, where rules are transparent, onchain, and enforceable.
 
+### The product trajectory: Execution → Clearing → Orchestration
+
+The three-era framework explains *why* smart accounts matter. This section explains *where JAW.id is going* with them. It extends the thesis from "the right architecture" to "the right architecture for an expanding set of financial operations."
+
+> Stablecoins are the new money. Blockchain is the instant settlement layer. JAW.id is the UX and infrastructure layer that makes it accessible.
+
+**Phase 1: Execution (Today)**
+Multi-chain transaction execution with independent chain support. Identity wallets live on all major EVM networks. Users and agents create accounts, transact, and manage permissions. Partial clearing (same-chain settlement).
+
+**Phase 2: Cross-Chain Clearing (Next)**
+Full cross-chain settlement. Users and agents operate seamlessly across chains from one identity wallet. A single account identity resolves and settles across any supported network. Unified settlement.
+
+**Phase 3: Orchestration (Future)**
+Bridge onchain rails with traditional finance. On-ramp/off-ramp integration connecting banks, processors, and merchants. JAW.id becomes the infrastructure layer where stablecoin payments meet fiat rails.
+
+The thesis arc: smart accounts are the right architecture (three-era framework) → JAW.id is the right infrastructure (product today) → the infrastructure expands from execution to settlement to orchestration (product trajectory). Each phase builds on the last. Each phase unlocks new use cases and revenue surface.
+
 ### How to deploy this narrative
 
 | Context | Depth | Lead With |

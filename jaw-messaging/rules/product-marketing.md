@@ -5,17 +5,18 @@ Core product descriptions, feature messaging, taglines, and copy blocks segmente
 ### Taglines and one-liners
 
 **Primary tagline:**
+
 > Web2 simplicity. Web3 sovereignty.
 
 **Product-focused one-liners:**
 
-| Context | One-liner |
-|---|---|
-| General | Identity-first smart accounts with passkeys and programmable permissions. |
-| Developer pitch | Two lines of code. Full smart account infrastructure. |
-| Business pitch | Give every user a self-custodial onchain account without building wallet infrastructure. |
-| Speed emphasis | From zero to smart accounts in an afternoon. |
-| Replacement framing | Replace 12–18 months of wallet development with one SDK. |
+| Context             | One-liner                                                                                |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| General             | Identity-first smart accounts with passkeys and programmable permissions.                |
+| Developer pitch     | Two lines of code. Full smart account infrastructure.                                    |
+| Business pitch      | Give every user a self-custodial onchain account without building wallet infrastructure. |
+| Speed emphasis      | From zero to smart accounts in an afternoon.                                             |
+| Replacement framing | Replace 12–18 months of wallet development with one SDK.                                 |
 
 ### The nine feature pillars
 
@@ -76,12 +77,15 @@ Already using Privy, Dynamic, or Web3Auth? Keep your existing KMS signer and upg
 JustaName is JAW.id's identity layer, but it also operates as a standalone product.
 
 **Standalone positioning:**
+
 > JustaName is ENS infrastructure for programmable digital identity. Issue human-readable names under your own namespace, resolve profiles across chains, and give users a portable onchain identity — all through a simple API.
 
 **Within JAW.id context:**
+
 > Every JAW.id account comes with a human-readable ENS name, powered by JustaName. Users are identified by `alice.yourapp.eth`, not `0x7a3b...`. The name travels with them across any ENS-compatible app.
 
 **Key proof points:**
+
 - Official ENS infrastructure provider (Q2 2025)
 - Funded by ENS ($300K yearly grant)
 - 7 live clients including Peanut (fastest-growing crypto wallet in Argentina)
@@ -92,13 +96,39 @@ JustaName is JAW.id's identity layer, but it also operates as a standalone produ
 This is one of our strongest hooks. Use it when the audience values speed-to-market. Always be prepared to back it up:
 
 ```tsx
-import { jawConnector } from '@jaw.id/wagmi';
+import { jawConnector } from "@jaw.id/wagmi";
 
-const connector = jawConnector({ apiKey: 'YOUR_API_KEY' });
+const connector = jawConnector({ apiKey: "YOUR_API_KEY" });
 // That's it — add this connector to your wagmi config
 ```
 
 The claim is accurate for the basic integration. A full-featured setup (ENS, gas sponsoring, permissions, custom UI) requires additional configuration, but the onboarding path is genuinely two lines.
+
+### Passkey syncing and backup
+
+Use this when explaining that "lose your device, lose your account" is not a real risk with passkeys. This is a common concern from non-technical audiences, investors, and enterprise partners.
+
+**How it works — Apple (iCloud Keychain):**
+
+- Devices form a syncing circle using asymmetric elliptic keys (P-384). Each passkey is encrypted so it can only be decrypted by devices within the user's circle of trust.
+- Items transfer through Apple servers but are end-to-end encrypted — Apple cannot read the contents.
+- Escrow recovery is encrypted using a hardware-bound keypair stored in an HSM, with the key inaccessible to Apple. Recovery requires iCloud authentication, SMS verification, _and_ the device passcode, with only 10 attempts allowed.
+
+**How it works — Google (Password Manager):**
+
+- Passkey private keys are uploaded only in encrypted form, using an encryption key accessible only on the user's own devices. Google itself cannot decrypt passkey material.
+- Recovery on a new device requires either the Google Password Manager PIN or the screen lock of another existing device. Verification runs in secure hardware enclaves with a maximum of 10 attempts, even against internal attacks.
+
+**The messaging takeaway:**
+
+> Your passkey syncs automatically across your devices, end-to-end encrypted. Neither Apple nor Google can access the key material. If you get a new phone, your account comes with you — no recovery flow, no seed phrase backup, no provider dependency.
+
+**Two layers of protection:**
+
+1. **Passkey sync:** Handles the common case — lost or replaced device. Automatic, transparent, end-to-end encrypted.
+2. **Smart account recovery:** Handles the edge case — total platform lockout. Guardian-based, social recovery, backup signers. Programmable at the account level.
+
+Users can also register multiple passkeys on different devices as an additional backup strategy.
 
 ### Common mistakes
 
@@ -106,4 +136,4 @@ The claim is accurate for the basic integration. A full-featured setup (ENS, gas
 - Do NOT list all nine features in every piece of content — pick the 2–3 most relevant to the audience and context.
 - Do NOT use "Web3" in headlines for mainstream audiences — it's a filter that loses people. Use "digital accounts," "smart accounts," or describe the capability directly.
 - Do NOT promise "free transactions" — say "gasless" and clarify that gas is sponsored by the app or paid in stablecoins.
-- Do NOT describe JAW.id as "like Privy but better" — position it as a different architectural generation (smart accounts vs KMS), not a slightly improved version of the same thing. When relevant, emphasize that existing KMS setups can be *upgraded* through JAW.id rather than replaced.
+- Do NOT describe JAW.id as "like Privy but better" — position it as a different architectural generation (smart accounts vs KMS), not a slightly improved version of the same thing. When relevant, emphasize that existing KMS setups can be _upgraded_ through JAW.id rather than replaced.

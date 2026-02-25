@@ -19,6 +19,7 @@ This reframes the competitive conversation entirely:
 > JAW.id doesn't replace your KMS provider. It upgrades it. Your existing signer becomes one key on a smart account — with spending limits, session expiration, and recovery options it never had before.
 
 **Why this matters:**
+
 - **Eliminates migration friction.** Teams with Privy/Dynamic already integrated can adopt JAW.id without rebuilding their auth flow.
 - **Turns competitors into components.** KMS providers become one signer among many, not the account itself. This is architecturally correct — a signer should be replaceable, not the identity.
 - **Lowers the decision threshold.** "Upgrade your existing stack" is easier to say yes to than "replace your existing stack."
