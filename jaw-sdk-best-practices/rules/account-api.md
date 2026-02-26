@@ -242,3 +242,35 @@ const account = await Account.create(config, { username: 'alice' });
 // Correct -- restores existing account
 const account = await Account.get(config, storedCredentialId);
 ```
+
+### ENS subname issuance
+
+#### Programmatic issuance (JustaName SDK)
+
+If using the Account class API directly instead of the wagmi connector or the provier, use `@justaname.id/sdk` with `overrideSignatureCheck: true` to bypass SIWE authentication:
+
+```bash
+npm install @justaname.id/sdk
+```
+
+```typescript
+import { JustaName } from '@justaname.id/sdk';
+
+const justaName = JustaName.init({
+  networks: [{ chainId: 1, providerUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' }],
+  ensDomains: [{ chainId: 1, ensDomain: 'myapp.eth', apiKey: 'your-api-key' }],
+  config: { domain: 'yourdapp.com', origin: 'https://yourdapp.com' },
+});
+
+await justaName.subnames.addSubname({
+  username: 'alice',
+  ensDomain: 'myapp.eth',
+  chainId: 1,
+  overrideSignatureCheck: true,
+});
+```
+
+The same API key from `dashboard.jaw.id` works for both JAW SDK and JustaName SDK — you do NOT need a separate key.
+
+You MUST provide `ensDomains` with `apiKey` in JustaName SDK init — subname creation will fail without it.
+You MUST NOT use `@jaw.id/core` for programmatic subname creation — it does not have `addSubname`.
