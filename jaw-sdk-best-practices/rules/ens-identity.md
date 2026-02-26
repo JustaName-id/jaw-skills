@@ -2,7 +2,7 @@
 
 Subname profile management — update records, resolve ENS names to profiles, and reverse-resolve addresses to ENS names using `@justaname.id/sdk`.
 
-> For subname issuance (auto-issue during connect or programmatic creation), see **Account API**.
+> For subname issuance if using the Account class API you can do it programmatically check the **Account API**, however, when using the wagmi connector or the EIP 1193 provider it is done automatically under the hood check the **Configuration**.
 
 ```bash
 npm install @justaname.id/sdk

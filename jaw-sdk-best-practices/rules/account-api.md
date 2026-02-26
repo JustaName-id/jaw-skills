@@ -245,41 +245,9 @@ const account = await Account.get(config, storedCredentialId);
 
 ### ENS subname issuance
 
-#### Auto-issuance during connect
-
-When `ens` is configured in your JAW SDK connector, new users are automatically prompted to claim a subname (e.g., `alice.myapp.eth`) during account creation. Returning users who already have a subname skip this step.
-
-You MUST configure your ENS domain in the JAW Dashboard (dashboard.jaw.id) before using it — without dashboard registration, subname issuance will fail silently.
-
-```typescript
-import { jaw } from '@jaw.id/wagmi';
-
-const connector = jaw({
-  apiKey: 'your-api-key',
-  ens: 'myapp.eth', // Must be registered in JAW Dashboard first
-});
-```
-
-Use the `subnameTextRecords` capability to attach text records to the user's subname during connection:
-
-```tsx
-connect({
-  connector: config.connectors[0],
-  capabilities: {
-    subnameTextRecords: [
-      { key: 'avatar', value: 'https://myapp.com/avatars/default.png' },
-      { key: 'description', value: 'A myapp.eth user' },
-    ],
-  },
-});
-```
-
-You MUST NOT expect subname prompts for returning users — subnames are only issued during new account creation.
-You MUST NOT request `subnameTextRecords` on a connector without `ens` configured.
-
 #### Programmatic issuance (JustaName SDK)
 
-For server-side or backend subname issuance outside the connect flow, use `@justaname.id/sdk` with `overrideSignatureCheck: true` to bypass SIWE authentication:
+If using the Account class API directly instead of the wagmi connector or the provier, use `@justaname.id/sdk` with `overrideSignatureCheck: true` to bypass SIWE authentication:
 
 ```bash
 npm install @justaname.id/sdk
