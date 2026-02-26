@@ -63,7 +63,11 @@ Reference these guidelines when:
 
 - <rules/use-cases.md> - Concrete scenarios and examples: agents, enterprise, payments, dApps
 
-### 7. Conferences & Events
+### 7. Integration — Developer & Technical Buyer Messaging
+
+- <rules/integration.md> - Devrel-voiced guide for explaining JAW's integration story to companies. Covers the stack JAW replaces, what developers don't need to worry about, and audience-specific talking points for engineering teams, CTOs, and teams migrating from KMS providers.
+
+### 8. Conferences & Events
 
 - <rules/conference.md> - Speaker bios, talk abstracts, booth copy, and event application templates
 
