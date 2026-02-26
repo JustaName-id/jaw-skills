@@ -9,7 +9,7 @@ ENS subname issuance, programmatic subname creation, and profile resolution. JAW
 
 The **same API key** from `dashboard.jaw.id` works for both SDKs — you do NOT need a separate key for JustaName SDK.
 
-They are complementary: JAW auto-issues subnames on connect; JustaName gives full programmatic control over subname creation and management.
+They are complementary — JAW SDK auto-issues subnames on connect; JustaName gives full programmatic control over subname creation and management.
 
 ### ENS configuration
 
@@ -89,7 +89,7 @@ import { JustaName } from '@justaname.id/sdk';
 
 const justaName = JustaName.init({
   networks: [{ chainId: 1, providerUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' }],
-  ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'your-api-key' }],
+  ensDomains: [{ chainId: 1, ensDomain: 'myapp.eth', apiKey: 'your-api-key' }],
   config: { domain: 'yourdapp.com', origin: 'https://yourdapp.com' },
 });
 ```
@@ -145,12 +145,12 @@ console.log(profile.records.coins);  // [{ id: 60, name: 'ETH', value: '0x...' }
 #### Reverse resolve by address
 
 ```typescript
-const result = await justaName.subnames.reverseResolve({
+const ensName = await justaName.subnames.reverseResolve({
   address: '0x1234...abcd',
   chainId: 1,
 });
 
-console.log(result.ens); // 'alice.myapp.eth'
+console.log(ensName); // 'alice.myapp.eth'
 ```
 
 ### Key rules
@@ -202,7 +202,7 @@ jaw.subnames.addSubname({ subname: 'alice.myapp.eth' }); // Does not exist
 import { JustaName } from '@justaname.id/sdk';
 const justaName = JustaName.init({
   networks: [{ chainId: 1, providerUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' }],
-  ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'your-api-key' }],
+  ensDomains: [{ chainId: 1, ensDomain: 'myapp.eth', apiKey: 'your-api-key' }],
   config: { domain: 'yourdapp.com', origin: 'https://yourdapp.com' },
 });
 await justaName.subnames.addSubname({ subname: 'alice.myapp.eth' });
@@ -220,7 +220,7 @@ await justaName.subnames.addSubname({ subname: 'alice.myapp.eth' }); // Fails
 // Correct -- include ensDomains with apiKey for subname creation
 const justaName = JustaName.init({
   networks: [{ chainId: 1, providerUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' }],
-  ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'your-api-key' }],
+  ensDomains: [{ chainId: 1, ensDomain: 'myapp.eth', apiKey: 'your-api-key' }],
   config: { domain: 'yourdapp.com', origin: 'https://yourdapp.com' },
 });
 ```
@@ -229,8 +229,8 @@ Do NOT use a different API key for JustaName SDK:
 
 ```typescript
 // Wrong -- using a separate key for JustaName SDK
-ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'some-other-key' }]
+ensDomains: [{ chainId: 1, ensDomain: 'myapp.eth', apiKey: 'some-other-key' }]
 
 // Correct -- same API key from dashboard.jaw.id works for both SDKs
-ensDomains: [{ chainId: 1, domain: 'myapp.eth', apiKey: 'your-jaw-api-key' }]
+ensDomains: [{ chainId: 1, ensDomain: 'myapp.eth', apiKey: 'your-jaw-api-key' }]
 ```
