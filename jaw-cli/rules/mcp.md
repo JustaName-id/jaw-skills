@@ -41,7 +41,7 @@ Example tool call:
 ```json
 {
   "method": "wallet_sendCalls",
-  "params": {"calls":[{"to":"0xRECIPIENT","value":"0xDE0B6B3A7640000"}]},
+  "params": {"calls":[{"to":"0xRECIPIENT","value":"1000000000000000000"}]},
   "chainId": 8453
 }
 ```

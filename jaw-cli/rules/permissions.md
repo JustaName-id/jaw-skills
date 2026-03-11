@@ -14,11 +14,11 @@ Allow spending up to 100 USDC per day from the account:
 
 ```bash
 jaw rpc call wallet_grantPermissions \
-  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","allowance":"0x5F5E100","unit":"day"}]}}' \
+  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","allowance":"100000000","unit":"day"}]}}' \
   -o json -y
 ```
 
-`allowance` is in the token's smallest unit (USDC has 6 decimals: `100000000` = 100 USDC = `0x5F5E100`).
+`allowance` is in the token's smallest unit as a decimal string (USDC has 6 decimals: 100 USDC = `"100000000"`).
 `expiry` is a Unix timestamp in seconds.
 
 Spend `unit` options: `minute` | `hour` | `day` | `week` | `month` | `year` | `forever`
@@ -29,7 +29,7 @@ Allow spending up to 0.1 ETH per day. Use `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeee
 
 ```bash
 jaw rpc call wallet_grantPermissions \
-  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE","allowance":"0x16345785D8A0000","unit":"day"}]}}' \
+  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE","allowance":"100000000000000000","unit":"day"}]}}' \
   -o json -y
 ```
 
@@ -47,7 +47,7 @@ jaw rpc call wallet_grantPermissions \
 
 ```bash
 jaw rpc call wallet_grantPermissions \
-  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE","allowance":"0xDE0B6B3A7640000","unit":"week"},{"token":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","allowance":"0x5F5E100","unit":"day"}]}}' \
+  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE","allowance":"1000000000000000000","unit":"week"},{"token":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","allowance":"100000000","unit":"day"}]}}' \
   -o json -y
 ```
 

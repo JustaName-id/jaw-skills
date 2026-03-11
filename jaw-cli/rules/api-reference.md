@@ -116,7 +116,7 @@ Send one or more calls. The primary transaction method.
     {
       "to": "0xADDRESS",
       "data": "0xCALLDATA",
-      "value": "0xHEX_WEI"
+      "value": "1000000000000000000"
     }
   ],
   "capabilities": {
@@ -127,14 +127,14 @@ Send one or more calls. The primary transaction method.
 }
 ```
 
-All call fields except `to` are optional. `value` and `chainId` default to `0` and the configured chain.
+All call fields except `to` are optional. `value` is a decimal wei string (e.g. `"1000000000000000000"` for 1 ETH). `chainId` defaults to the configured chain.
 
 **Returns:** `{ id: string, chainId: number }` — batch ID for status polling
 
 ```bash
 # Send ETH
 jaw rpc call wallet_sendCalls \
-  '{"calls":[{"to":"0xRECIPIENT","value":"0xDE0B6B3A7640000"}]}' \
+  '{"calls":[{"to":"0xRECIPIENT","value":"1000000000000000000"}]}' \
   -o json -y
 
 # Batch two calls
@@ -155,7 +155,7 @@ Send a single transaction. Prefer `wallet_sendCalls` for new integrations.
 {
   "to": "0xADDRESS",
   "data": "0xCALLDATA",
-  "value": "0xHEX_WEI"
+  "value": "1000000000000000000"
 }
 ```
 
@@ -163,7 +163,7 @@ Send a single transaction. Prefer `wallet_sendCalls` for new integrations.
 
 ```bash
 jaw rpc call eth_sendTransaction \
-  '{"to":"0xRECIPIENT","value":"0xDE0B6B3A7640000"}' \
+  '{"to":"0xRECIPIENT","value":"1000000000000000000"}' \
   -o json -y
 ```
 
@@ -311,7 +311,7 @@ Grant ERC-7715 permissions to allow third-party execution.
     "spends": [
       {
         "token": "0xTOKEN_ADDRESS",
-        "allowance": "0xHEX_TOKEN_UNITS",
+        "allowance": "DECIMAL_TOKEN_UNITS",
         "unit": "day",
         "multiplier": 1
       }
@@ -336,12 +336,12 @@ Grant ERC-7715 permissions to allow third-party execution.
 ```bash
 # ERC-20 spend permission (100 USDC/day on Base)
 jaw rpc call wallet_grantPermissions \
-  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","allowance":"0x5F5E100","unit":"day"}]}}' \
+  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","allowance":"100000000","unit":"day"}]}}' \
   -o json -y
 
 # Native ETH spend (0.1 ETH/day)
 jaw rpc call wallet_grantPermissions \
-  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE","allowance":"0x16345785D8A0000","unit":"day"}]}}' \
+  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE","allowance":"100000000000000000","unit":"day"}]}}' \
   -o json -y
 ```
 

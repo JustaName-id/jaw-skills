@@ -6,17 +6,17 @@ Use `wallet_sendCalls` as the primary method for sending transactions. It suppor
 
 ```bash
 jaw rpc call wallet_sendCalls \
-  '{"calls":[{"to":"0xRECIPIENT","value":"0xDE0B6B3A7640000"}]}' \
+  '{"calls":[{"to":"0xRECIPIENT","value":"1000000000000000000"}]}' \
   -o json -y
 ```
 
-`value` is a hex-encoded amount in wei. `0xDE0B6B3A7640000` = 1 ETH.
+`value` is the amount in wei as a decimal string.
 
 Common values:
-- 0.001 ETH = `0x38D7EA4C68000`
-- 0.01 ETH = `0x2386F26FC10000`
-- 0.1 ETH = `0x16345785D8A0000`
-- 1 ETH = `0xDE0B6B3A7640000`
+- 0.001 ETH = `"1000000000000000"`
+- 0.01 ETH = `"10000000000000000"`
+- 0.1 ETH = `"100000000000000000"`
+- 1 ETH = `"1000000000000000000"`
 
 ### Send ERC-20 tokens
 
@@ -51,7 +51,7 @@ Send multiple calls atomically in a single transaction:
 jaw rpc call wallet_sendCalls \
   '{"calls":[
     {"to":"0xCONTRACT_1","data":"0xCALLDATA_1"},
-    {"to":"0xCONTRACT_2","data":"0xCALLDATA_2","value":"0x0"}
+    {"to":"0xCONTRACT_2","data":"0xCALLDATA_2","value":"0"}
   ]}' \
   -o json -y
 ```
@@ -62,7 +62,7 @@ Set `paymasterUrl` in config, then include the capability in the call:
 
 ```bash
 jaw rpc call wallet_sendCalls \
-  '{"calls":[{"to":"0xRECIPIENT","value":"0xDE0B6B3A7640000"}],"capabilities":{"paymasterService":{"url":"https://paymaster.example.com"}}}' \
+  '{"calls":[{"to":"0xRECIPIENT","value":"1000000000000000000"}],"capabilities":{"paymasterService":{"url":"https://paymaster.example.com"}}}' \
   -o json -y
 ```
 
@@ -70,7 +70,7 @@ Or set it globally via config:
 
 ```bash
 jaw config set paymasterUrl=https://paymaster.example.com
-jaw rpc call wallet_sendCalls '{"calls":[{"to":"0xRECIPIENT","value":"0x0"}]}' -o json -y
+jaw rpc call wallet_sendCalls '{"calls":[{"to":"0xRECIPIENT","value":"0"}]}' -o json -y
 ```
 
 ### Check transaction status
@@ -94,13 +94,13 @@ jaw rpc call wallet_getCallsHistory -o json
 Override the default chain for a specific command:
 
 ```bash
-jaw rpc call wallet_sendCalls '{"calls":[{"to":"0xRECIPIENT","value":"0x0"}]}' -c 1 -o json -y
+jaw rpc call wallet_sendCalls '{"calls":[{"to":"0xRECIPIENT","value":"0"}]}' -c 1 -o json -y
 ```
 
 ### Key rules
 
 - You MUST use `wallet_sendCalls` instead of `eth_sendTransaction` for new integrations — it supports batching, paymasters, and permissions
-- You MUST encode `value` as a hex string in wei (e.g. `"0xDE0B6B3A7640000"` for 1 ETH)
+- You MUST encode `value` as a decimal wei string (e.g. `"1000000000000000000"` for 1 ETH)
 - You MUST ABI-encode ERC-20 calldata — do not pass token amounts as plain numbers
 - You MUST pass `-y` in AI agent contexts to skip confirmation prompts
 - You MUST pass `-o json` when the output will be parsed programmatically
