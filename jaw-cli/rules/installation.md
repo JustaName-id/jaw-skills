@@ -44,6 +44,15 @@ jaw disconnect
 
 This stops the daemon and closes the browser session. The next RPC call will re-open the browser.
 
+### Switching accounts
+
+To switch to a different account, you MUST disconnect first, then reconnect. Calling `eth_requestAccounts` while already connected will return the current account — it will not prompt for a different one.
+
+```bash
+jaw rpc call wallet_disconnect -o json
+jaw rpc call eth_requestAccounts -o json
+```
+
 ### Key rules
 
 - You MUST have Node.js 18+ installed

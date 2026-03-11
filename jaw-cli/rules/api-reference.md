@@ -334,14 +334,14 @@ Grant ERC-7715 permissions to allow third-party execution.
 **Returns:** `{ permissionId: string, spender, expiry, calls, spends, ... }` — use `permissionId` to revoke later
 
 ```bash
-# ERC-20 spend permission (100 USDC/day on Base)
+# ERC-20 spend permission (100 USDC/day) + call permission
 jaw rpc call wallet_grantPermissions \
-  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","allowance":"100000000","unit":"day"}]}}' \
+  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913","allowance":"100000000","unit":"day","multiplier":1}],"calls":[{"target":"0xCONTRACT","selector":"0xSELECTOR"}]}}' \
   -o json -y
 
-# Native ETH spend (0.1 ETH/day)
+# Native ETH spend (0.1 ETH/day) + call permission
 jaw rpc call wallet_grantPermissions \
-  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE","allowance":"100000000000000000","unit":"day"}]}}' \
+  '{"expiry":1893456000,"spender":"0xSPENDER_ADDRESS","permissions":{"spends":[{"token":"0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE","allowance":"100000000000000000","unit":"day","multiplier":1}],"calls":[{"target":"0xCONTRACT","selector":"0xSELECTOR"}]}}' \
   -o json -y
 ```
 
