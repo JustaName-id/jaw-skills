@@ -1,7 +1,7 @@
 ---
-
-## name: jaw-cli
+name: jaw-cli
 description: Best practices and usage guide for the JAW CLI (@jaw.id/cli). Use this skill when using the `jaw` command-line tool, scripting JAW wallet operations in shell, configuring the CLI, sending transactions or signing messages via the CLI, managing permissions from the terminal, setting up the JAW MCP server for AI agents, or when asked about JAW CLI commands, configuration, or patterns.
+---
 
 # JAW CLI
 

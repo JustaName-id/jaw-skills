@@ -63,6 +63,23 @@ Example:
 {"key": "defaultChain", "value": "8453"}
 ```
 
+#### `jaw_status`
+
+Check the current status of the JAW.id relay bridge — whether a relay session exists, the bridge connection is active, and what configuration is in use. No parameters.
+
+Example response:
+```json
+{
+  "relay": { "session": true },
+  "bridgeConnection": "disconnected",
+  "config": { "apiKey": "redacted", "defaultChain": 84532 }
+}
+```
+
+#### `jaw_disconnect`
+
+Close the relay session and browser tab. Call this when done making wallet requests to clean up resources. No parameters.
+
 ### Using jaw_rpc in agent prompts
 
 When instructing an AI agent to perform wallet operations, use natural language — the agent maps intent to the correct `jaw_rpc` call:
