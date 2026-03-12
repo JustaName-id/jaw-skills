@@ -10,6 +10,7 @@ Single source of truth for how we talk about JAW.id. Every other messaging rule 
 | **JustaName** | The ENS identity service. One word, camelCase N. | Justa Name, JustaName.id (unless referring to the website), JUSTANAME |
 | **JustaLab** | The parent company. One word, camelCase L. | Justa Lab, JustaLabs (no plural), JUSTALAB |
 | **JAW SDK** | The developer toolkit. Refers to `@jaw.id/wagmi`, `@jaw.id/core`, and `@jaw.id/ui` collectively. | JAW.id SDK, Jaw SDK |
+| **JAW CLI** | The command-line interface and MCP server (`@jaw.id/cli`). Binary: `jaw`. | JAW terminal, jaw-cli, JAW command line |
 | **JAW Dashboard** | The developer portal at dashboard.jaw.id. | JAW console, JAW admin |
 
 ### Core concepts — approved terms

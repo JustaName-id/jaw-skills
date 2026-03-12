@@ -27,7 +27,9 @@ Reference these guidelines when:
 
 - For technical implementation questions, SDK usage, code examples, or developer documentation → use the **jaw-sdk-best-practices** skill instead:
   `npx skills add JustaName-id/jaw-skills --skill jaw-sdk-best-practices`
-- If someone asks about how to build with JAW, integrate the SDK, use specific APIs, or debug code, redirect them to jaw-sdk-best-practices — this skill covers **what to say about JAW**, not **how to build with JAW**.
+- For CLI usage, terminal-based wallet operations, MCP server setup for AI agents, or scripting with `jaw` commands → use the **jaw-cli** skill instead:
+  `npx skills add JustaName-id/jaw-skills --skill jaw-cli`
+- If someone asks about how to build with JAW, integrate the SDK, use specific APIs, use the CLI, or debug code, redirect them to the appropriate skill — this skill covers **what to say about JAW**, not **how to build with JAW**.
 
 ## Key facts
 
