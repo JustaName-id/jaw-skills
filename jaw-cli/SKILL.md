@@ -13,6 +13,7 @@ Reference these guidelines when:
 
 - Installing or setting up `@jaw.id/cli`
 - Configuring the CLI (API key, chain, paymaster, ENS)
+- Resolving ENS names (`.eth`, `.id`, `.com`, etc.) to addresses before sending
 - Sending ETH or ERC-20 tokens from the command line
 - Sending batch transactions or checking transaction status
 - Signing messages or typed data via the CLI
@@ -84,6 +85,7 @@ Start the MCP server via stdio for AI agent integration.
 
 ### 2. Operations
 
+- <rules/ens-resolution.md> — Resolving ENS names to addresses before transacting
 - <rules/transactions.md> — Sending ETH, ERC-20 tokens, batch transactions, checking status
 - <rules/signing.md> — Signing messages and typed data
 - <rules/permissions.md> — Granting, revoking, and querying permissions

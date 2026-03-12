@@ -99,6 +99,7 @@ jaw rpc call wallet_sendCalls '{"calls":[{"to":"0xRECIPIENT","value":"0"}]}' -c 
 
 ### Key rules
 
+- You MUST resolve ENS names to addresses before constructing any transaction — see <rules/ens-resolution.md>
 - You MUST use `wallet_sendCalls` instead of `eth_sendTransaction` for new integrations — it supports batching, paymasters, and permissions
 - You MUST encode `value` as a decimal wei string (e.g. `"1000000000000000000"` for 1 ETH)
 - You MUST ABI-encode ERC-20 calldata — do not pass token amounts as plain numbers
