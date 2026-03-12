@@ -35,7 +35,7 @@ Every user gets a human-readable name (e.g., `alice.yourapp.eth`) at onboarding,
 Apps can sponsor gas entirely, or let users pay in USDC, USDT, or any ERC-20 token. No one needs to hold ETH to use the app.
 
 **5. AI Agent Delegation**
-Grant constrained permissions to AI agents: spending limits, whitelisted contracts, time-bounded sessions. Agents operate within defined boundaries — the account enforces the rules onchain.
+Grant constrained permissions to AI agents: spending limits, whitelisted contracts, time-bounded sessions. Agents operate within defined boundaries — the account enforces the rules onchain. The JAW CLI includes a built-in MCP server for direct AI agent integration.
 
 **6. Recurring Payments & Subscriptions**
 Users approve a payment schedule once. The app charges on schedule within the approved limits. No repeated wallet popups. Built on ERC-7715 permissions.

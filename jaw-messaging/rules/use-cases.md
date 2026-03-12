@@ -52,7 +52,7 @@ Each use case follows the same structure: the problem the vertical faces, how JA
 - The agent operates as a delegated signer within those boundaries. The account enforces the rules onchain.
 - The human can revoke the permission at any time.
 
-**Key features:** AI agent delegation (ERC-7715 permissions), programmable permissions, headless Account API, true self-custody.
+**Key features:** AI agent delegation (ERC-7715 permissions), programmable permissions, headless Account API, JAW CLI with MCP server for AI agent integration, true self-custody.
 
 **Example narrative — DCA bot:**
 > A user wants an AI agent to dollar-cost-average $50/week into ETH. They grant the agent a permission: call the DEX router, spend up to $50 USDC per week, valid for 90 days. The agent executes weekly. If the user wants to stop, they revoke the permission. The agent never had full account access — only the specific authority it was granted.
@@ -62,6 +62,9 @@ Each use case follows the same structure: the problem the vertical faces, how JA
 
 **Example narrative — Service payments:**
 > An AI coding assistant needs to pay for compute, API calls, and cloud resources. Its owner grants a permission: up to $100/month, only to whitelisted service provider contracts. The agent pays for what it uses. The owner sees every transaction onchain.
+
+**Developer tooling angle:**
+> The JAW CLI (`@jaw.id/cli`) gives developers the full JAW.id experience from the terminal — send transactions, check balances, sign messages, and more. It also includes a built-in MCP server (`jaw mcp`) that exposes the same capabilities to AI agents through the MCP protocol. Permissions can be layered on top to constrain what an agent is allowed to do.
 
 ---
 

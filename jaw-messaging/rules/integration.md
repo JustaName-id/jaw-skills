@@ -132,6 +132,16 @@ Key angles:
 - **Immediate gains.** Programmable permissions, batch transactions, ENS identity — from day one.
 - **Reduced vendor risk.** The account works independently of any single signer. If the KMS provider has downtime, backup passkeys maintain access.
 
+#### AI agent builders and DevOps teams
+
+> "The JAW CLI is the full JAW.id experience from the terminal. Install `@jaw.id/cli` and you can send transactions, check balances, sign messages, manage ENS names, and do everything you'd do through the SDK — from the command line. Run `jaw mcp` and the same capabilities are available to AI agents through the MCP protocol."
+
+Key angles:
+
+- **Full account access.** Everything the SDK offers — transactions, signing, balances, ENS, batch operations — available from the terminal.
+- **MCP server built in.** `jaw mcp` starts a stdio MCP server — AI agents like Claude connect natively and get the same capabilities.
+- **Complements webapp integrations.** Teams using the wagmi SDK for their frontend can use the CLI for scripting, automation, and agent workflows alongside it.
+
 ---
 
 ### Common mistakes
@@ -140,4 +150,4 @@ Key angles:
 - **Don't position as "another wallet SDK."** JAW.id replaces the wallet SDK _and_ the account abstraction provider _and_ the identity service. If you describe it as a wallet SDK, you're underselling by two-thirds. Use the three-in-one framing.
 - **Don't forget the upgrade path for KMS teams.** Many prospects already have Privy or Dynamic integrated. Leading with "replace your stack" creates friction. Leading with "upgrade your stack" creates opportunity. Always mention that existing KMS signers can be used as constrained signers on a JAW.id smart account.
 - **Don't list infrastructure components without the "what goes away" framing.** Saying "we handle bundlers, paymasters, and gas estimation" is less compelling than "you never configure a bundler, deploy a paymaster, or write gas estimation logic." Frame it from the developer's perspective — what they stop doing, not what JAW does.
-- **Don't confuse this with SDK documentation.** This rule covers _how to talk about_ the integration experience. For actual implementation guidance, code examples, and API reference, use **jaw-sdk-best-practices**.
+- **Don't confuse this with SDK or CLI documentation.** This rule covers _how to talk about_ the integration experience. For actual implementation guidance, code examples, and API reference, use **jaw-sdk-best-practices**. For CLI usage and MCP server setup, use **jaw-cli**.
