@@ -48,6 +48,7 @@ Reference these guidelines when:
 
 - <rules/wagmi-setup.md> - Wagmi connector setup, providers, using standard wagmi hooks with JAW
 - <rules/connect-disconnect.md> - useConnect, useDisconnect, connection with capabilities
+- <rules/reown-appkit.md> - Adding JAW to an existing Reown AppKit project via WagmiAdapter
 
 ### 3. Core Operations
 
