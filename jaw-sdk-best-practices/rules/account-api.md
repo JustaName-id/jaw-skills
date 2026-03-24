@@ -87,19 +87,24 @@ const account = await Account.import(config);
 const account = await Account.restore(config, credentialId, publicKey);
 ```
 
-#### Account.fromLocalAccount -- server-side (private key)
+#### Account.fromLocalAccount -- server-side / embedded wallets
 
-You MUST use `Account.fromLocalAccount` for server-side operations where WebAuthn is not available. This uses a private key instead of a passkey. `getMetadata()` returns `null` for local accounts since there is no passkey.
+You MUST use `Account.fromLocalAccount` for server-side operations or embedded wallet integrations where WebAuthn is not available. `getMetadata()` returns `null` for local accounts since there is no passkey.
 
 ```typescript
 import { privateKeyToAccount } from 'viem/accounts';
 
 const localAccount = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
+
+// Default — new counterfactual smart account address
 const account = await Account.fromLocalAccount(config, localAccount);
 
-console.log('Address:', account.address);
-// account.getMetadata() returns null for local accounts
+// EIP-7702 — preserves the EOA address as the smart account address
+const account = await Account.fromLocalAccount(config, localAccount, { eip7702: true });
+// account.address === localAccount.address
 ```
+
+When `{ eip7702: true }` is passed, the EOA's address is preserved via EIP-7702 delegation. The SDK handles authorization signing and owner registration automatically on the first transaction. Works with any Viem LocalAccount — private keys, Privy, Turnkey, etc. See <rules/eip7702-upgrade.md> for full details and provider examples.
 
 ### Static utility methods
 
