@@ -1,6 +1,6 @@
 ## Signing
 
-Sign messages and typed data using the connected passkey account. All signing methods require browser interaction for passkey confirmation.
+Sign messages and typed data using the connected passkey account. In default mode, signing requires browser interaction for passkey confirmation. In auto mode (`--session`), signing happens locally with the session key.
 
 ### Sign a plain message (personal_sign)
 
@@ -55,9 +55,20 @@ jaw rpc call wallet_sign \
 
 Returns a hex signature string.
 
+### Sign with auto mode (no browser)
+
+With `--session`, signing uses the local session key — no browser needed:
+
+```bash
+jaw rpc call personal_sign '["Hello from agent", "0xSESSION_ADDRESS"]' --session -o json -y
+jaw rpc call eth_signTypedData_v4 "..." --session -o json -y
+```
+
+Note: `wallet_sign` is not supported in session mode. Use `personal_sign` or `eth_signTypedData_v4`.
+
 ### Key rules
 
-- You MUST keep the browser tab open — signing requires passkey confirmation in the browser
+- In default mode, you MUST keep the browser tab open — signing requires passkey confirmation
 - `personal_sign` params are `[message, address]` — always pass both; use `eth_accounts` to get the address
 - `eth_signTypedData_v4` params are `[address, typedDataJsonString]` — the typed data must be a JSON-encoded **string**, not an object; use `jq` to encode: `($td | tojson)`
 - `wallet_sign` uses `{request:{type:"0x45"|"0x01", data:{...}}}` — not `{account, data}`

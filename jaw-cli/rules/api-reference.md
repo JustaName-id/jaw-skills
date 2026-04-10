@@ -2,11 +2,11 @@
 
 Full reference for all RPC methods supported by `jaw rpc call`. Pass `params` as a JSON string. If the native params is a single value or object, the CLI wraps it automatically, you do not need to add the outer array. If the native params is already an array (e.g. a list of permissions to revoke), pass it as-is.
 
-Methods that require browser interaction (passkey confirmation) are marked **[browser]**.
+Methods that require browser interaction (passkey confirmation) are marked **[browser]**. Methods supported in auto mode (`--session`) are marked **[session]**.
 
 ---
 
-### eth_requestAccounts **[browser]**
+### eth_requestAccounts **[browser]** **[session]**
 
 Request account access. Opens browser if not connected.
 
@@ -20,7 +20,7 @@ jaw rpc call eth_requestAccounts -o json
 
 ---
 
-### eth_accounts
+### eth_accounts **[session]**
 
 Get connected account addresses without triggering a browser prompt.
 
@@ -104,7 +104,7 @@ jaw rpc call wallet_switchEthereumChain '{"chainId":"0x2105"}' -o json -y
 
 ---
 
-### wallet_sendCalls **[browser]**
+### wallet_sendCalls **[browser]** **[session]**
 
 Send one or more calls. The primary transaction method.
 
@@ -169,7 +169,7 @@ jaw rpc call eth_sendTransaction \
 
 ---
 
-### wallet_getCallsStatus
+### wallet_getCallsStatus **[session]**
 
 Get the status of a batch submitted via `wallet_sendCalls`.
 
@@ -210,7 +210,7 @@ jaw rpc call wallet_getCallsHistory -o json
 
 ---
 
-### personal_sign **[browser]**
+### personal_sign **[browser]** **[session]**
 
 Sign a message with the connected account. Params are `[message, address]`.
 
@@ -228,7 +228,7 @@ jaw rpc call personal_sign '["0x48656c6c6f", "0xYOUR_ADDRESS"]' -o json -y
 
 ---
 
-### eth_signTypedData_v4 **[browser]**
+### eth_signTypedData_v4 **[browser]** **[session]**
 
 Sign EIP-712 typed structured data. Params are `[address, typedDataJsonString]` — address first, typed data as a JSON-encoded **string**.
 
