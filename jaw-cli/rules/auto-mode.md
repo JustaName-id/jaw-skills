@@ -4,8 +4,8 @@ Auto mode lets AI agents operate a JAW smart account without a browser or passke
 
 ### How it works
 
-1. **Setup (one-time, human required):** `jaw session setup` generates a session key, opens browser for passkey approval of `wallet_grantPermissions`, saves encrypted keystore + session config locally.
-2. **Execution (autonomous):** `jaw rpc call ... --session` decrypts the key, signs locally, sends through PermissionManager. No browser, no human.
+1. **Setup (one-time, human required):** `jaw session setup` generates a session key, opens browser for passkey approval of `wallet_grantPermissions`, saves the keystore + session config to `~/.jaw/` (file mode `0o600`).
+2. **Execution (autonomous):** `jaw rpc call ... --session` loads the session key from disk, signs locally, sends through PermissionManager. No browser, no human.
 3. **Teardown (human required):** `jaw session revoke` opens browser, revokes on-chain permission, deletes local files.
 
 ### Prerequisites
@@ -28,7 +28,7 @@ jaw config write '{"apiKey":"YOUR_KEY","defaultChain":84532,"paymasters":{"84532
 jaw session setup --chain 84532
 ```
 
-Opens browser once for passkey. Creates `~/.jaw/keystore.json` (encrypted session key) and `~/.jaw/session-config.json` (permissionId, addresses, expiry).
+Opens browser once for passkey. Creates `~/.jaw/keystore.json` (session private key, file mode `0o600`) and `~/.jaw/session-config.json` (permissionId, addresses, expiry).
 
 Optional overrides:
 
@@ -42,6 +42,24 @@ jaw session setup --expiry 14
 # Skip overwrite confirmation
 jaw session setup --chain 84532 --yes
 ```
+
+### Funding the session smart account
+
+The session key acts as its own smart account at the `Session address` shown by `jaw session status`. That smart account needs gas to execute transactions. Pick **one** of:
+
+1. **Configure a paymaster for the chain.** Set `paymasters[<chainId>].url` in `~/.jaw/config.json` (e.g. Pimlico). The session's UserOps are sponsored — no native ETH required on the session address.
+2. **Fund the session smart account directly.** Send a small amount of native gas to the `Session address`. The address is deterministic per session key, so once funded it persists for the session's lifetime.
+
+If neither is in place, the first `wallet_sendCalls --session` fails with:
+
+```
+UserOperationExecutionError: Smart Account does not have sufficient funds
+to execute the User Operation.
+…
+Details: FailedOp(0,"AA21 didn't pay prefund")
+```
+
+This is the ERC-4337 entry point rejecting a UserOp it can't prefund — not a CLI bug. Add gas or a paymaster and retry.
 
 ### Using --session
 
@@ -80,10 +98,9 @@ jaw rpc call eth_requestAccounts -o json -y
 | `personal_sign`         | Signs message with session key                              |
 | `eth_signTypedData_v4`  | Signs typed data with session key                           |
 
-Blocked methods (require browser):
-- `wallet_grantPermissions` — "Requires browser — run jaw session setup"
-- `wallet_revokePermissions` — "Requires browser — run jaw session revoke"
-- Any other method — "Method X is not supported in auto mode"
+Blocked methods (any method not in the table above):
+
+The CLI rejects with `Error: Method <name> is not supported in session mode. Use without --session to route through the browser bridge.` This includes `wallet_grantPermissions` (use `jaw session setup` instead) and `wallet_revokePermissions` (use `jaw session revoke` instead), as well as everything else not listed.
 
 ### Session management
 
@@ -111,7 +128,7 @@ Even if the session key is compromised, damage is bounded by **on-chain enforcem
 - **Time bound** — permission expires automatically
 - **Instant revocation** — owner can revoke anytime via passkey
 
-The keystore is encrypted with AES-256-GCM using the API key. It is useless without the API key. The on-chain PermissionManager is the primary security boundary.
+The keystore stores the session private key as plaintext hex in `~/.jaw/keystore.json` with file mode `0o600` (read/write only by the owning user). The parent directory `~/.jaw/` is mode `0o700`. There is no application-level encryption — the on-chain PermissionManager is the primary security boundary. The granted permission scope (calls + spends + expiry) caps the worst case if the file is exfiltrated, and the owner can `jaw session revoke` at any time to neutralize the key.
 
 ### Typical agent workflow
 
@@ -133,15 +150,19 @@ jaw session revoke
 
 ### Error handling
 
-| Scenario                        | Error message                                                           |
-| ------------------------------- | ----------------------------------------------------------------------- |
-| No keystore                     | "No session configured. Run jaw session setup first."                   |
-| Session expired                 | "Session expired on DATE. Run jaw session setup to create a new session." |
-| Unsupported method              | "Method NAME is not supported in auto mode."                            |
-| Browser-only method             | "Requires browser — run jaw session setup/revoke."                      |
-| API key changed                 | "Failed to decrypt keystore. API key may have changed."                 |
-| Transaction exceeds spend limit | On-chain revert from PermissionManager                                  |
-| Unauthorized contract call      | On-chain revert from PermissionManager                                  |
+| Scenario | Error / behavior |
+| --- | --- |
+| No keystore | `Error: No session configured. Run \`jaw session setup\` first.` |
+| Session expired (local timestamp passed) | `Error: Session expired on <ISO_DATE>. Run \`jaw session setup\` to create a new session.` |
+| Method not supported in session mode (anything outside `eth_accounts` / `eth_requestAccounts` / `wallet_sendCalls` / `wallet_getCallsStatus` / `personal_sign` / `eth_signTypedData_v4` — including `wallet_grantPermissions` and `wallet_revokePermissions`) | `Error: Method <name> is not supported in session mode. Use without --session to route through the browser bridge.` |
+| Chain mismatch (`--session --chain X` while session is on chain Y) | `Error: Session was created for chain <Y>, but --chain <X> was requested. Run \`jaw session setup --chain <X>\` to create a session for that chain.` |
+| Keystore or session-config corrupted on disk | `Error: Keystore at <path> is corrupted. Run \`jaw session setup\` to recreate it.` (or the session-config equivalent) |
+| `jaw session setup` over an existing session with non-TTY stdin and no `--yes` | `Error: Existing session found, but stdin is not a terminal (piped, redirected, or running in CI). Re-run with --yes to overwrite the existing session non-interactively.` |
+| `jaw session setup` failed after the inner revoke had already succeeded (e.g. bad permissions file, network error) | Stderr: `Old permission was revoked on-chain but setup did not complete. Local session-config still references the revoked permission; run \`jaw session setup\` again to create a new session.` — printed above the underlying error. |
+| Session smart account has no native gas and no paymaster configured (first `wallet_sendCalls --session`) | `UserOperationExecutionError: Smart Account does not have sufficient funds … FailedOp(0,"AA21 didn't pay prefund")`. Fund the address shown by `jaw session status`, or configure `paymasters[<chainId>]` in `~/.jaw/config.json`. |
+| Transaction violates permission scope (out-of-scope target/selector, or spend limit exceeded) | On-chain revert from PermissionManager. The CLI currently surfaces a generic `UserOperationExecutionError: Execution reverted for an unknown reason` — the typed revert reason is not yet parsed and translated. |
+
+All errors exit non-zero. Pattern-match on the substring shown rather than the full message — exact wording may evolve.
 
 ### Key rules
 
@@ -149,9 +170,10 @@ jaw session revoke
 - You MUST run `jaw session setup` once (requires browser) before using `--session`
 - You MUST pass `--session` (or `-s` or `JAW_SESSION=true`) to use auto mode — it is never auto-detected
 - You MUST pass `-o json -y` for AI agent contexts
+- `jaw session setup` requires `--yes` when run with non-TTY stdin (pipes, heredocs, CI) AND a session already exists. The CLI rejects upfront with an actionable error rather than risk a readline race that could mutate on-chain state mid-flow. Always pass `--yes` for AI-agent and CI invocations.
 - `wallet_sendCalls` with `--session` auto-injects the `permissionId` — do NOT pass it manually
 - `eth_requestAccounts` with `--session` returns the session key's address, NOT the owner's address
 - Session files are stored in `~/.jaw/keystore.json` and `~/.jaw/session-config.json`
 - To change permission scope: `jaw session revoke` then `jaw session setup` with new permissions
 - Editing `permissions` in config does NOT affect an active session — permissions are enforced on-chain
-- Do NOT share `~/.jaw/keystore.json` — it contains the encrypted session private key
+- Do NOT share `~/.jaw/keystore.json` — it contains the session private key in plaintext (file mode `0o600`); anyone who reads the file can spend within the on-chain permission scope until it expires or is revoked
