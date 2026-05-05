@@ -34,8 +34,17 @@ interface AccountConfig {
   apiKey: string;            // API key from dashboard.jaw.id
   paymasterUrl?: string;     // Paymaster URL for gas sponsoring
   paymasterContext?: Record<string, unknown>; // Provider-specific paymaster options
+
+  // React Native fields -- see `<rules/react-native.md>`
+  storage?: SyncStorage;                  // Persistent storage (defaults to in-memory in RN)
+  nativeGetFn?: NativePasskeyGetFn;       // Native passkey get fn (e.g. Passkey.get)
+  nativeCreateFn?: NativePasskeyCreateFn; // Native passkey create fn (e.g. Passkey.create)
+  rpId?: string;                          // Required in RN -- explicit hostname
+  rpName?: string;                        // Display name shown in passkey prompt
 }
 ```
+
+For React Native usage, see `<rules/react-native.md>` -- RN requires `nativeGetFn`, `nativeCreateFn` (for `Account.create`), an explicit `rpId`, and a `SyncStorage` for persistence.
 
 ```typescript
 const config = {
@@ -158,8 +167,8 @@ const gas = await account.estimateGas([
   { to: '0xRecipient...', value: parseEther('0.1') },
 ]);
 
-// Check batch call status (sync -- reads from internal store)
-const status = account.getCallStatus(id);
+// Check batch call status (async -- reads from internal store, falls back to bundler RPC)
+const status = await account.getCallStatus(id);
 // status.status: 100=Pending, 200=Completed, 400=Failed, 500=Reverted
 ```
 
@@ -223,7 +232,7 @@ const address = await account.getAddress();
 - You MUST NOT call `getMetadata()` on an account created with `fromLocalAccount` and expect passkey data -- it returns `null`.
 - You MUST NOT use `Account.get` without `credentialId` when you need guaranteed authentication -- it silently restores from cache and may fail if no session exists.
 - You MUST NOT mix `Account` API with wagmi hooks in the same flow -- pick one approach.
-- You MUST poll `getCallStatus` after `sendCalls` to confirm completion -- it returns before the transaction is mined.
+- You MUST `await` `getCallStatus` after `sendCalls` to confirm completion -- the method is async and `sendCalls` returns before the transaction is mined.
 - You MUST use `parseEther` or `parseUnits` from viem for value conversion -- never hardcode wei values.
 
 ### Common mistakes
