@@ -97,6 +97,18 @@ Override the default chain for a specific command:
 jaw rpc call wallet_sendCalls '{"calls":[{"to":"0xRECIPIENT","value":"0"}]}' -c 1 -o json -y
 ```
 
+### Send with auto mode (no browser)
+
+If a session is set up, add `--session` to send without browser approval. The `permissionId` is auto-injected:
+
+```bash
+jaw rpc call wallet_sendCalls \
+  '{"calls":[{"to":"0xRECIPIENT","value":"100000000000000000"}]}' \
+  --session -o json -y
+```
+
+All the same patterns work (batching, ERC-20, etc.) — just add `--session`. See <rules/auto-mode.md> for setup.
+
 ### Key rules
 
 - You MUST resolve ENS names to addresses before constructing any transaction — see <rules/ens-resolution.md>
@@ -107,3 +119,4 @@ jaw rpc call wallet_sendCalls '{"calls":[{"to":"0xRECIPIENT","value":"0"}]}' -c 
 - You MUST pass `-o json` when the output will be parsed programmatically
 - Do NOT send `value` for ERC-20 transfers — the token amount goes in the ABI-encoded `data`, not `value`
 - Do NOT omit `"to"` for contract calls — it is always required
+- When using `--session`, do NOT pass `permissionId` manually — it is auto-injected from session config
