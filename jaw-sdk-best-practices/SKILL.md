@@ -28,6 +28,7 @@ Reference these guidelines when:
 - Building stablecoin payment flows (USDC gas, batch payouts)
 - Choosing between CrossPlatform and AppSpecific authentication modes
 - Implementing a custom UI handler for app-specific mode
+- Building React Native / Expo apps with passkey-authenticated smart accounts
 - Reviewing or debugging code that uses JAW SDK
 
 ## Key facts
@@ -77,6 +78,7 @@ Reference these guidelines when:
 ### 7. Advanced
 
 - <rules/account-api.md> - Headless Account class for AI agents, server-side, embedded wallets
+- <rules/react-native.md> - React Native (Expo bare) - passkey adapter, native deps, AASA/assetlinks, storage
 - <rules/custom-ui-handler.md> - Building a custom UIHandler for app-specific mode
 - <rules/provider-api.md> - Direct provider RPC methods reference and patterns
 
