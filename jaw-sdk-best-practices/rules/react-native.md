@@ -253,7 +253,7 @@ const account = await Account.import(buildConfig());
 - You MUST set an explicit `rpId` -- there is no `window.location.hostname` to fall back on.
 - You MUST host both `apple-app-site-association` (iOS) and `assetlinks.json` (Android) at the domain used as `rpId`, with the matching Team ID / package fingerprint.
 - You MUST provide a persistent `SyncStorage` (MMKV or similar). The default in-memory fallback loses all passkeys on app restart.
-- You MUST `await` `account.getCallStatus(...)` -- the method is async and falls back to a bundler RPC call on cache miss.
+- You MUST poll `await account.getCallStatus(...)` until the status leaves `100=Pending` -- the method is async and `sendCalls` returns before the transaction is mined.
 - You MUST install the crypto polyfill (`install()` from `react-native-quick-crypto`) at the JS entry point before any JAW import -- viem and ox depend on `crypto.getRandomValues` and `crypto.subtle`.
 - You MUST rebuild with `prebuild --clean` after changing native deps or `app.json` ios/android config. JS-only SDK updates only need `expo start --clear`.
 - You MUST NOT use Expo Go -- `react-native-passkey` and `react-native-quick-crypto` are NitroModules and need a custom dev client.
@@ -346,9 +346,3 @@ const config = {
 | Android passkey call fails silently | `assetlinks.json` missing or wrong SHA-256 | Verify `curl https://<rpId>/.well-known/assetlinks.json` returns the build's keystore fingerprint |
 | `getCallStatus` returns 400 (offchain failure) | Background receipt poller couldn't resolve a bundler client | Upgrade `@jaw.id/core` to the latest version |
 | `Account.create` succeeds but smart account deployment fails (`AA13 initCode failed`) | Public key extracted at wrong length (65 vs 64 bytes) | Upgrade `@jaw.id/core` to the latest version |
-
-### Related
-
-- `<rules/account-api.md>` -- Account class reference (factories, instance methods, transactions, signing)
-- `<rules/auth-modes.md>` -- CrossPlatform vs AppSpecific (RN sits inside AppSpecific conceptually)
-- `<rules/installation.md>` -- Package selection and peer deps
